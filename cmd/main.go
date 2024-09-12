@@ -2,11 +2,15 @@ package main
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"github.com/go-sql-driver/mysql"
 	"github.com/roman-haidarov/go-rest-api/cmd/api"
 	"github.com/roman-haidarov/go-rest-api/config"
 	"github.com/roman-haidarov/go-rest-api/db"
-	"log"
 )
 
 func main() {
@@ -26,9 +30,18 @@ func main() {
 	initStorage(db)
 
 	server := api.NewAPIServer(":8080", db)
-	if err := server.Run(); err != nil {
-		log.Fatal(err)
-	}
+
+	go func() {
+		if err := server.Run(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Error occurred while running server: %s", err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	server.GracefulShutdown()
 }
 
 func initStorage(db *sql.DB) {
