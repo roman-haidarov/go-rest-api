@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 type Config struct {
@@ -13,6 +13,7 @@ type Config struct {
 	DBPasswd   string
 	DBAddress  string
 	DBName     string
+	ApiKey     string
 }
 
 var Envs = initConfig()
@@ -27,6 +28,7 @@ func initConfig() Config {
 		DBPasswd:   getEnv("DB_PASSWORD", "Password"),
 		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), "3306"),
 		DBName:     getEnv("DB_NAME", "development"),
+		ApiKey:     getEnv("API_KEY", "-"),
 	}
 }
 

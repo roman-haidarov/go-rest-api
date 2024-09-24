@@ -36,7 +36,8 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 
 func (s *APIServer) SetupRoutes() {
 	subrouter := s.router.PathPrefix("/api/v1").Subrouter()
-	clientHandler := client.NewHandler()
+	clientStore := client.NewStore(s.db)
+	clientHandler := client.NewHandler(clientStore)
 	clientHandler.RegisterRoutes(subrouter)
 }
 
