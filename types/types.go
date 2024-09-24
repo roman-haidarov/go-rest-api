@@ -158,10 +158,10 @@ type Client struct {
 }
 
 type RegisterClientPayload struct {
-	IdentificationNo string `json:"identificationNo"`
-	Phone            string `json:"phone"`
-	Email            string `json:"email"`
-	Password         string `json:"password"`
+	IdentificationNo string `json:"identificationNo" validate:"required"`
+	Phone            string `json:"phone" validate:"required"`
+	Email            string `json:"email" validate:"required,email"`
+	Password         string `json:"password" validate:"required,min=3,max=130"`
 }
 
 /*
