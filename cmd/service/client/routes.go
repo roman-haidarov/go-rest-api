@@ -3,6 +3,8 @@ package client
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/roman-haidarov/go-rest-api/cmd/service/auth"
 	"github.com/roman-haidarov/go-rest-api/types"
@@ -29,6 +31,12 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	var client types.RegisterClientPayload
 	if err := utils.ParseJSON(r, client); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
+	}
+
+	if err := utils.Valdate.Struct(client); err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
+		return
 	}
 
 	_, err := h.store.GetClientByIin(client.IdentificationNo)

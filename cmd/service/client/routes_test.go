@@ -3,11 +3,12 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/roman-haidarov/go-rest-api/types"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"github.com/gorilla/mux"
+	"github.com/roman-haidarov/go-rest-api/types"
 )
 
 func TestClientServiceHandlers(t *testing.T) {
@@ -18,8 +19,8 @@ func TestClientServiceHandlers(t *testing.T) {
 		payload := types.RegisterClientPayload{
 			IdentificationNo: "960517351807",
 			Phone:            "+77018732323",
-			Email:            "RonaldMacDonald@gmail.com",
-			Password:  			  "123",
+			Email:            "MacDonald@gmail.com",
+			Password:  			  "123JdsaW",
 		}
 		marshalled, _ := json.Marshal(payload)
 
@@ -46,11 +47,11 @@ func TestClientServiceHandlers(t *testing.T) {
 type mockClientStore struct {}
 
 func (m *mockClientStore) GetClientByIin(iin string) (*types.Client, error) {
-	return nil, nil
+	return nil, fmt.Errorf("client not found")
 }
 
 func (m *mockClientStore) GetClientById(id int) (*types.Client, error) {
-	return nil, nil
+	return nil, fmt.Errorf("client not found")
 }
 
 func (m *mockClientStore) CreateClient(types.Client) error {
